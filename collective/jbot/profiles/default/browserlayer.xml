@@ -1,0 +1,6 @@
+<layers>
+  <layer
+    name="collective.jbot"
+    interface="collective.jbot.interfaces.ILayer"
+    />
+</layers>

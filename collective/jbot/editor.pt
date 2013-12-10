@@ -1,0 +1,190 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    lang="en"
+    metal:use-macro="context/main_template/macros/master"
+    i18n:domain="plone">
+
+<head>
+<metal:block fill-slot="top_slot">
+
+<tal:defines define="dummy python:request.set('disable_border',1);
+                     disable_column_one python:request.set('disable_plone.leftcolumn',1);
+                     disable_column_two python:request.set('disable_plone.rightcolumn',1);"/>
+
+</metal:block>
+
+<metal:block fill-slot="head_slot" tal:define="resourceDirectory nocall:view/resourceDirectory">
+
+<!-- File manager -->
+<metal:block use-macro="resourceDirectory/@@plone.resourceeditor.filemanager/macros/resources" />
+
+<script type="text/javascript" tal:content="view/jsVariables"></script>
+
+<script type="text/javascript">
+
+    jQuery(function($) {
+
+        $().ready(function() {
+
+            var WINDOW_BASE = window.location.protocol + '//' + window.location.host;
+
+            var WINDOWED_HEIGHT = '300px';
+            var FULLSCREEN_HEIGHT = '600px';
+
+            // Editor management
+
+            var extensionModes = {
+                css: "ace/mode/css",
+                js: "ace/mode/javascript",
+                htm: "ace/mode/html",
+                html: "ace/mode/html",
+                xml: "ace/mode/xml"
+            };
+            var defaultMode = "ace/mode/text";
+
+            function getExtension(path) {
+                var m = path.match(/.(\w+)$/);
+                if(m == null) return null;
+                return m[1].toLowerCase();
+            }
+
+            function isHTMLFile(path) {
+                var extension = getExtension(path);
+                return extension == 'html' || extension == 'htm';
+            }
+
+            // See http://stackoverflow.com/questions/1694295/jquery-background-color-animate-not-working/5718151
+            function animateHighlight(node, highlightColor, duration) {
+                var highlightBg = highlightColor || "#FFFFE3";
+                var animateMs = duration || 750;
+                var originalBg = $(node).css("background-color");
+
+                if (!originalBg || originalBg == highlightBg)
+                    originalBg = "#FFFFFF"; // default to white
+
+                $(node)
+                    .css("backgroundColor", highlightBg)
+                    .animate({ backgroundColor: originalBg }, animateMs, null, function () {
+                        $(node).css("backgroundColor", originalBg);
+                    });
+            };
+
+            if($.browser.msie) {
+                $(".ie-warning").show();
+            }
+            var RESOURCES = null;
+            $.ajax({
+              url: portal_url + '/@@available-resources',
+              success: function(data){
+                RESOURCES = data;
+              }
+            });
+            var $searchContainer = $('#search-resources');
+            var $results = $('ul', $searchContainer);
+            var handler = function(e){
+              e.preventDefault();
+              $results.empty();
+              var val = $('input', $searchContainer).val().toLowerCase();
+              for(var i=0; i<RESOURCES.length; i++){
+                if(RESOURCES[i].toLowerCase().indexOf(val) !== -1){
+                  $results.append('<li>' + RESOURCES[i] + '</li>');
+                }
+              }
+            };
+            $('button', $searchContainer).click(handler);
+            $('form', $searchContainer).submit(handler);
+            $("#search-resources-btn").overlay({
+              closeOnClick: false,
+              onBeforeLoad: function() {
+                $('input', $searchContainer).focus();
+              },
+              onBeforeClose: function() {
+              }
+            });
+      });
+    });
+</script>
+<style>
+  #newfolder{
+    display: none;
+  }
+</style>
+
+</metal:block>
+</head>
+
+<body>
+<div metal:fill-slot="content" class="documentEditable" id="themeMapper" tal:define="resourceDirectory nocall:view/resourceDirectory">
+
+    <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+      Portal status message
+    </div>
+
+    <dl class="portalMessage warning" tal:condition="python:view.active and view.editable">
+        <dt i18n:translate="">Warning</dt>
+        <dd i18n:translate="theming_mapper_warning_live">
+            This theme is currently active. Any changes made will be immediately
+            reflected on the live site.
+        </dd>
+    </dl>
+
+    <div id="content">
+
+
+        <div id="page-intro">
+
+            <h1 class="documentFirstHeading">
+              jbot
+            </h1>
+
+            <a href=""
+                class="link-parent"
+                tal:attributes="href string:${portal_url}/@@theming-controlpanel"
+                i18n:translate="label_up_to_theming_controlpanel">
+                    Back to the control panel
+            </a>
+
+            <dl style="display: none" class="ie-warning portalMessage warning">
+                <dt i18n:translate="">Warning</dt>
+                <dd i18n:translate="theming_mapper_warning_ie">
+                    You are using Internet Explorer. The theme mapper will work,
+                    but some functionality will not be available. We recommend that
+                    you use Mozilla Firefox or Google Chrome instead.
+                </dd>
+            </dl>
+
+        </div>
+        <metal:block use-macro="resourceDirectory/@@plone.resourceeditor.filemanager/macros/filemanager">
+          <span id="secondary-buttons" metal:fill-slot="extraButtons">
+            <button
+              id="search-resources-btn"
+              class="allowMultiSubmit"
+              rel="#search-resources"
+              >Search Resources</button>
+          </span>
+        </metal:block>
+
+        <div id="search-resources" class="overlay overlay-ajax">
+          <div class="close">
+            <span i18n:translate="">Close</span>
+          </div>
+          <div class="pb-ajax">
+            <div class="search-resources">
+              Doesn't do anything fancy right now except help you find potential
+              file to override. You'll have to add the files manually.
+              <form>
+                <input placeholder="search template name" />
+                <button type="submit" class="search">Search</button>
+              </form>
+              <ul class="results">
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

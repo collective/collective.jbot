@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<object
+    name="portal_controlpanel"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="plone"
+    purge="False">
+
+    <configlet
+        title="jbot"
+        action_id="collective.jbot"
+        appId="collective.jbot"
+        category="Products"
+        condition_expr=""
+        url_expr="string:${portal_url}/++jbot++custom/@@jbot-editor"
+        visible="True">
+        <permission>Manage portal</permission>
+    </configlet>
+</object>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<import-steps>
+ <import-step id="collective.jbot" version="1"
+              handler="collective.jbot.setuphandlers.install"
+              title="collective.jbot install">
+ </import-step>
+</import-steps>
