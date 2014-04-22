@@ -89,7 +89,10 @@
               var val = $('input', $searchContainer).val().toLowerCase();
               for(var i=0; i<RESOURCES.length; i++){
                 if(RESOURCES[i].toLowerCase().indexOf(val) !== -1){
-                  $results.append('<li>' + RESOURCES[i] + '</li>');
+                  var el = document.createElement('li');
+                  var $el = $(el);
+                  $el.html(RESOURCES[i]);
+                  $results.append($el);
                 }
               }
             };
