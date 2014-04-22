@@ -1,10 +1,15 @@
 Introduction
 ============
 
-This package aims to bring support for TTW jbot support for Plone. jbot
-customizations can be added for each plone site. There is likely a minor
-performance impact on utilizing this product. No benchmarks have been taken
-yet.
+TTW template customization manager.
+
+This package aims to bring support for TTW jbot(or "Just a bunch of templates")
+support for Plone. jbot customizations can be added for each plone site. There
+is likely a minor performance impact on utilizing this product. No benchmarks
+have been taken yet.
+
+This package is an extension of z3c.jbot which allows you to do template
+overrides in python packages for Plone.
 
 
 JBOT with Diazo
