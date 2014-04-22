@@ -1,6 +1,7 @@
 from zope import interface
 import os
 import sys
+import traceback
 from z3c.jbot import interfaces
 from z3c.jbot.manager import find_package
 from zope.globalrequest import getRequest
@@ -11,8 +12,14 @@ from plone.resource.interfaces import IResourceDirectory
 import Globals
 from zope.component import ComponentLookupError
 from DateTime import DateTime
+from plone.app.theming.utils import getCurrentTheme
+from plone.resource.utils import queryResourceDirectory
+from plone.app.theming.interfaces import THEME_RESOURCE_NAME
+import logging
+from collective.jbot.interfaces import REQ_CACHE_KEY
 
 
+logger = logging.getLogger('collective.jbot')
 IGNORE = object()
 
 
@@ -22,21 +29,34 @@ _file_cache = {}
 class Storage(object):
 
     def __init__(self):
-        self.persistent = getUtility(
+        self._directory = None
+        persistent = getUtility(
             IResourceDirectory, name="persistent")[RESOURCE_DIRECTORY_NAME]
-        self.directory = self.persistent['custom']
+        self.directory = persistent['custom']
         self.site = getSite()
+        self.theme = getCurrentTheme()
+        if self.theme:
+            directory = queryResourceDirectory(
+                THEME_RESOURCE_NAME, self.theme)
+            try:
+                self.themeDirectory = directory['jbot']
+            except:
+                self.themeDirectory = None
+        else:
+            self.themeDirectory = None
 
     def __contains__(self, name):
+        if self.themeDirectory:
+            if name in self.themeDirectory:
+                return True
         return self.directory and name in self.directory
 
-    def get(self, filename, template):
-        # get path to file for template
-        fi = self.directory[filename]
+    def getFileFromDirectory(self, directory, filename):
+        fi = directory[filename]
         jbot_dir = os.path.join(Globals.data_dir, 'jbot')
         site_id = self.site.getId()
         if not os.path.exists(jbot_dir):
-            os.mkdir(jbot_dir)
+            os.makedirs(jbot_dir)
         site_jbot_dir = os.path.join(jbot_dir, site_id)
         if not os.path.exists(site_jbot_dir):
             os.mkdir(site_jbot_dir)
@@ -48,8 +68,13 @@ class Storage(object):
             tmpfi.close()
         return filepath
 
-
-_req_cache_key = 'collective.jbot.storage'
+    def get(self, filename, template):
+        # get path to file for template
+        if self.themeDirectory and filename in self.themeDirectory:
+            directory = self.themeDirectory
+        elif self.directory and filename in self.directory:
+            directory = self.directory
+        return self.getFileFromDirectory(directory, filename)
 
 
 class TemplateManager(object):
@@ -62,11 +87,14 @@ class TemplateManager(object):
 
     @property
     def customized_filenames(self):
-        key = '%s.%s' % (_req_cache_key, 'customized_filenames')
+        key = '%s.%s' % (REQ_CACHE_KEY, 'customized_filenames')
         if key not in self.req.environ:
             storage = self.storage
             if storage:
-                self.req.environ[key] = storage.directory.listDirectory()
+                files = list(storage.directory.listDirectory())
+                if storage.themeDirectory:
+                    files.extend(storage.themeDirectory.listDirectory())
+                self.req.environ[key] = files
             else:
                 self.req.environ[key] = []
         return self.req.environ[key]
@@ -79,30 +107,43 @@ class TemplateManager(object):
 
     @property
     def paths(self):
-        key = '%s.%s' % (_req_cache_key, 'paths')
+        key = '%s.%s' % (REQ_CACHE_KEY, 'paths')
         if key not in self.req.environ:
             self.req.environ[key] = {}
         return self.req.environ[key]
 
     @property
     def templates(self):
-        key = '%s.%s' % (_req_cache_key, 'templates')
+        key = '%s.%s' % (REQ_CACHE_KEY, 'templates')
         if key not in self.req.environ:
             self.req.environ[key] = {}
         return self.req.environ[key]
 
     @property
     def storage(self):
-        if _req_cache_key not in self.req.environ:
+        if REQ_CACHE_KEY not in self.req.environ:
             try:
-                self.req.environ[_req_cache_key] = Storage()
+                self.req.environ[REQ_CACHE_KEY] = Storage()
             except ComponentLookupError:
-                self.req.environ[_req_cache_key] = None
-        return self.req.environ[_req_cache_key]
+                self.req.environ[REQ_CACHE_KEY] = None
+        return self.req.environ[REQ_CACHE_KEY]
 
     def registerTemplate(self, template, token):
         """
-        Return True is there has been a change to the override.
+        wrap this method so we can log errors easily
+        """
+        try:
+            return self._registerTemplate(template, token)
+        except:
+            if 'jbot.error' not in self.req.environ:
+                # only log one error per request
+                self.req.environ['jbot.error'] = True
+                logger.error(
+                    'collective.jbot error: %s' % traceback.format_exc())
+
+    def _registerTemplate(self, template, token):
+        """
+        Return True if there has been a change to the override.
         Due to the nature of this implementation, a multi-site deployment
         could cause the template setting of resources to be re-set
         often. This is probably not optimal. And with chamelean I wonder if
@@ -167,7 +208,7 @@ class TemplateManager(object):
                 if not hasattr(template, '_filename'):
                     template._filename = template.filename
 
-                # save template and registry and assign path
+                # save template, registry and assign path
                 template.filename = filepath
                 self.templates[token] = filename
 

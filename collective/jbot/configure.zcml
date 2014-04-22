@@ -7,6 +7,7 @@
     i18n_domain="collective.jbot">
 
   <include package="five.globalrequest" />
+  <include package="z3c.jbot" />
 
   <genericsetup:registerProfile
       name="default"
