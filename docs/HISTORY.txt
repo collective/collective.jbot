@@ -1,10 +1,11 @@
 Changelog
 =========
 
-1.0dev (unreleased)
+1.0a2 (2014-04-22)
 -------------------
 
-- nothing yet
+- fix potential rendering issue with script tag and editor
+
 
 1.0a1 (2014-04-22)
 ------------------
