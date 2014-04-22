@@ -48,4 +48,11 @@
         permission="cmf.ManagePortal"
         />
 
+  <browser:page
+        name="customize-jbot-resource"
+        for="*"
+        class=".views.CustomizeView"
+        permission="cmf.ManagePortal"
+        />
+
 </configure>

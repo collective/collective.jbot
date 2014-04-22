@@ -5,7 +5,7 @@ import traceback
 from z3c.jbot import interfaces
 from z3c.jbot.manager import find_package
 from zope.globalrequest import getRequest
-from interfaces import RESOURCE_DIRECTORY_NAME
+from collective.jbot.interfaces import RESOURCE_DIRECTORY_NAME
 from zope.component.hooks import getSite
 from zope.component import getUtility
 from plone.resource.interfaces import IResourceDirectory

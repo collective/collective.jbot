@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0a2'
+version = '1.0a3'
 
 setup(name='collective.jbot',
       version=version,
@@ -29,7 +29,7 @@ setup(name='collective.jbot',
           'setuptools',
           'z3c.jbot',
           'five.globalrequest',
-          'plone.app.theming',
+          'plone.app.theming>=1.1',
           'plone.resource'
       ],
       extras_require={

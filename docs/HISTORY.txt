@@ -1,8 +1,14 @@
 Changelog
 =========
 
+1.0a3 (2014-04-22)
+------------------
+
+- provide simple customize button when searching for resources.
+
+
 1.0a2 (2014-04-22)
--------------------
+------------------
 
 - fix potential rendering issue with script tag and editor
 

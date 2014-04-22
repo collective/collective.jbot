@@ -27,6 +27,8 @@
     jQuery(function($) {
 
         $().ready(function() {
+            var $parent = $('.link-parent');
+            $parent.attr('href', portal_url + '/plone_control_panel');
 
             var WINDOW_BASE = window.location.protocol + '//' + window.location.host;
 
@@ -91,7 +93,30 @@
                 if(RESOURCES[i].toLowerCase().indexOf(val) !== -1){
                   var el = document.createElement('li');
                   var $el = $(el);
-                  $el.html(RESOURCES[i]);
+                  var customize = document.createElement('a');
+                  var $customize = $(customize);
+                  $customize.html('Customize');
+                  $customize.attr('href', '#');
+                  $customize.attr('data-resource', RESOURCES[i]);
+                  $customize.click(function(e){
+                    e.preventDefault();
+                    $.ajax({
+                      url: portal_url + '/@@customize-jbot-resource',
+                      type: 'POST',
+                      data: {
+                        _authenticator: $('[name="_authenticator"]').val(),
+                        resource: $(this).attr('data-resource')
+                      },
+                      success: function(){
+                        window.location.reload();
+                      },
+                      error: function(){
+                        alert('error customizing');
+                      }
+                    });
+                  });
+                  $el.html(RESOURCES[i] + ' - ');
+                  $el.append($customize);
                   $results.append($el);
                 }
               }
