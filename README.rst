@@ -19,6 +19,16 @@ All you need to do is install this package on a plone site and then create
 a `jbot` folder in your diazo theme.
 
 
+JBOT without Diazo
+------------------
+
+Just add a file with the dotted name in the control panel.
+Lets say you want to override the serch template. You first go to /portal_view_customization, 
+click on the template you want to override and look at the name. In this case it would be:
+plone.app.search.search.pt.
+Add a file with this name, thats all.
+
+
 Site customizations
 -------------------
 
