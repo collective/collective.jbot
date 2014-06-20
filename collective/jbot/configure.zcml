@@ -55,4 +55,10 @@
         permission="cmf.ManagePortal"
         />
 
+  <browser:resource
+    name="jboteditor.js"
+    file="editor.js"
+    layer=".interfaces.ILayer"
+    />
+
 </configure>
