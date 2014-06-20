@@ -68,10 +68,7 @@
     <script type="text/javascript" src="/Plone/portal_javascripts/Sunburst%20Theme/++resource++plone.app.jquery.js"></script>
     <script type="text/javascript" src="/Plone/portal_javascripts/Sunburst%20Theme/jquery-integration.js"></script>
     <script type="text/javascript" src="/Plone/portal_javascripts/Sunburst%20Theme/++resource++plone.app.jquerytools.js"></script>
-    <script type="text/javascript" src="/Plone/portal_javascripts/Sunburst%20Theme/++resource++plone.app.jquerytools.dateinput.js"></script>
     <script type="text/javascript" src="/Plone/portal_javascripts/Sunburst%20Theme/++resource++plone.app.jquerytools.overlayhelpers.js"></script>
-    <script type="text/javascript" src="/Plone/portal_javascripts/Sunburst%20Theme/++resource++plone.app.jquerytools.form.js"></script>
-    <script type="text/javascript" src="/Plone/portal_javascripts/Sunburst%20Theme/register_function.js"></script>
     <script type="text/javascript" src="/Plone/portal_javascripts/Sunburst%20Theme/plone_javascript_variables.js"></script>
     <script type="text/javascript" src="/Plone/portal_javascripts/Sunburst%20Theme/nodeutilities.js"></script>
     <script type="text/javascript" src="/Plone/portal_javascripts/Sunburst%20Theme/modernizr.js"></script>
@@ -224,7 +221,7 @@ var BASE_URL = '/Plone/++jbot++custom';
                     </div>
                 </span>
                 <div id="contextButtons">
-                    <button id="save" name="save" type="button" class="btn disabled">Save file</button>
+                    <button id="save" name="save" type="button" class="btn btn-warning disabled">Save file</button>
                     
                 </div>
             </div>
