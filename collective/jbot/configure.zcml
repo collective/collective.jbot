@@ -55,6 +55,13 @@
         class=".views.CustomizeView"
         permission="cmf.ManagePortal"
         />
+        
+  <browser:page
+        name="sample"
+        for="*"
+        template="sample.pt"
+        permission="zope2.View"
+        />
 
   <browser:resource
     name="jboteditor.js"
