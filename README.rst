@@ -3,8 +3,8 @@ Introduction
 
 TTW template customization manager.
 
-This package aims to bring support for TTW jbot(or "Just a bunch of templates")
-support for Plone. jbot customizations can be added for each plone site. There
+This package aims to bring support for TTW jbot (or "Just a bunch of templates")
+support for Plone. jbot customizations can be added for each Plone site. There
 is likely a minor performance impact on utilizing this product. No benchmarks
 have been taken yet.
 
@@ -15,21 +15,20 @@ overrides in python packages for Plone.
 JBOT with Diazo
 ---------------
 
-All you need to do is install this package on a plone site and then create
+All you need to do is install this package on a Plone site and then create
 a `jbot` folder in your diazo theme.
 
 
 Site customizations / JBOT without Diazo
 ----------------------------------------
 
-Once you install the product on a plone site, in `Site Setup`, there will
+Once you install the product on a Plone site, in `Site Setup`, there will
 be a `jbot` control panel entry. From there, you can add your jbot
 customizations for that site.
 
-Lets say you want to override the serch template. You first go to /portal_view_customization, 
-click on the template you want to override and look at the name. In this case it would be:
-plone.app.search.search.pt.
-Add a file with this name, thats all.
+Lets say you want to override the footer template. Click the `Search
+Resources` button, search for `footer`, and click the customize button
+next to the template name in the search results.
 
 
 
@@ -44,8 +43,8 @@ Installation
 ------------
 
 This implementation requires the use of the data directory of a running
-plone client. For most plone installs, the directory used will be something
-like `<buildout-dir>/var/instance/jbot`. The user running the plone client
+Plone client. For most Plone installs, the directory used will be something
+like `<buildout-dir>/var/instance/jbot`. The user running the Plone client
 will need write access to this directory.
 
 

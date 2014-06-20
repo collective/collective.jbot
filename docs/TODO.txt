@@ -1,7 +1,15 @@
-* integrate with Diazo theming panel
-* have ability to add new views (not overrides) that could then be used in Diazo
-* add function to search within templates, with warning that it may be slow
+More important
+--------------
+
+* integrate with Diazo theming panel, and still keep separate jbot configlet
+* Swap customization precedence so that jbot configlet customizations override customizations in the theme
 * clean up UI, make sure button text make sense, style with bootstrap (for Plone 5)
 * make plone.resourceeditor look prettier
-* display HTML/TAL errors in the template. Display as a warning before saving with buttons: “Go back to editing” and “Save anyway”
 * When you click the customize button, the template should automatically open in the editor
+* add function to search within templates, with warning that it may be slow
+
+Less urgent
+-----------
+
+* display HTML/TAL errors in the template. Display as a warning before saving with buttons: “Go back to editing” and “Save anyway”
+* have ability to add new views (not overrides) that could then be used in Diazo
