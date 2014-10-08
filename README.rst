@@ -28,7 +28,8 @@ customizations for that site.
 
 Lets say you want to override the footer template. Click the `Search
 Resources` button, search for `footer`, and click the customize button
-next to the template name in the search results.
+next to the template name in the search results. You can then make changes
+to the template, save, and the changes will be visible in the site on refresh.
 
 
 
