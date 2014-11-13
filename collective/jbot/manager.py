@@ -14,6 +14,7 @@ from zope.component import ComponentLookupError
 from DateTime import DateTime
 from plone.app.theming.utils import getCurrentTheme
 from plone.resource.utils import queryResourceDirectory
+from zope.filerepresentation.interfaces import IRawReadFile
 from plone.app.theming.interfaces import THEME_RESOURCE_NAME
 import logging
 from collective.jbot.interfaces import REQ_CACHE_KEY
@@ -61,10 +62,18 @@ class Storage(object):
         if not os.path.exists(site_jbot_dir):
             os.mkdir(site_jbot_dir)
         filepath = os.path.join(site_jbot_dir, filename)
+        if fi.__class__.__name__ == "FilesystemFile":
+            last_modified = fi.lastModifiedTimestamp
+        else:
+            last_modified = fi._p_mtime
         if not os.path.exists(filepath) or \
-                DateTime(fi._p_mtime) > DateTime(os.stat(filepath).st_mtime):
+                DateTime(last_modified) > DateTime(os.stat(filepath).st_mtime):
             tmpfi = open(filepath, 'wb')
-            tmpfi.write(str(fi.data))
+            if fi.__class__.__name__ == "FilesystemFile":
+                data = IRawReadFile(fi).read()
+            else:
+                data = str(fi.data)
+            tmpfi.write(data)
             tmpfi.close()
         return filepath
 
