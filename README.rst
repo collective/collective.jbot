@@ -53,3 +53,19 @@ will need write access to this directory.
     The template customizations are not run in restricted python. Be sure to
     inspect any third party themes that utilize this. Additionally, be sure
     to trust site owner who will be adding their own customizations.
+
+
+TODO
+----
+- plone 5 compatible
+- decide core, installed by default
+- potentially unify interface from resource registries
+- improve ace edit integration
+- mockup/theme editor like
+- search needs to be able to filter by types
+- filter out editable items that are not useful
+- template registraiton information
+- icons for files
+- be able to export/import of the content
+- indexing the contents so searching is by contents of them, not just the name
+- versioning of customizations
