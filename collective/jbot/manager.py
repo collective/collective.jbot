@@ -1,23 +1,25 @@
-from zope import interface
+# -*- coding: utf-8 -*-
+import logging
 import os
 import sys
 import traceback
+
+from DateTime import DateTime
+import Globals
+from collective.jbot.interfaces import REQ_CACHE_KEY
+from collective.jbot.interfaces import RESOURCE_DIRECTORY_NAME
+from plone.app.theming.interfaces import THEME_RESOURCE_NAME
+from plone.app.theming.utils import getCurrentTheme
+from plone.resource.interfaces import IResourceDirectory
+from plone.resource.utils import queryResourceDirectory
 from z3c.jbot import interfaces
 from z3c.jbot.manager import find_package
-from zope.globalrequest import getRequest
-from collective.jbot.interfaces import RESOURCE_DIRECTORY_NAME
-from zope.component.hooks import getSite
-from zope.component import getUtility
-from plone.resource.interfaces import IResourceDirectory
-import Globals
+from zope import interface
 from zope.component import ComponentLookupError
-from DateTime import DateTime
-from plone.app.theming.utils import getCurrentTheme
-from plone.resource.utils import queryResourceDirectory
+from zope.component import getUtility
+from zope.component.hooks import getSite
 from zope.filerepresentation.interfaces import IRawReadFile
-from plone.app.theming.interfaces import THEME_RESOURCE_NAME
-import logging
-from collective.jbot.interfaces import REQ_CACHE_KEY
+from zope.globalrequest import getRequest
 
 
 logger = logging.getLogger('collective.jbot')
@@ -52,16 +54,26 @@ class Storage(object):
                 return True
         return self.directory and name in self.directory
 
-    def getFileFromDirectory(self, directory, filename):
-        fi = directory[filename]
-        jbot_dir = os.path.join(Globals.data_dir, 'jbot')
+    def _get_fs_path(self):
+        """ returns FS path for jbot storage.
+        """
+        base_path = '/'.join(Globals.data_dir.split('/')[:-1])
+        jbot_dir = os.path.join(base_path, 'jbot')
         site_id = self.site.getId()
         if not os.path.exists(jbot_dir):
             os.makedirs(jbot_dir)
-        site_jbot_dir = os.path.join(jbot_dir, site_id)
-        if not os.path.exists(site_jbot_dir):
-            os.mkdir(site_jbot_dir)
-        filepath = os.path.join(site_jbot_dir, filename)
+            logger.info('created missing directory {}'.format(jbot_dir))
+
+        fs_path = os.path.join(jbot_dir, site_id)
+        if not os.path.exists(fs_path):
+            os.mkdir(fs_path)
+            logger.info('created missing directory {}'.format(fs_path))
+        return fs_path
+
+    def getFileFromDirectory(self, directory, filename): # noqa
+        fi = directory[filename]
+        path = self._get_fs_path()
+        filepath = os.path.join(path, filename)
         if fi.__class__.__name__ == "FilesystemFile":
             last_modified = fi.lastModifiedTimestamp
         else:
@@ -137,7 +149,7 @@ class TemplateManager(object):
                 self.req.environ[REQ_CACHE_KEY] = None
         return self.req.environ[REQ_CACHE_KEY]
 
-    def registerTemplate(self, template, token):
+    def registerTemplate(self, template, token): # noqa
         """
         wrap this method so we can log errors easily
         """
@@ -150,7 +162,7 @@ class TemplateManager(object):
                 logger.error(
                     'collective.jbot error: %s' % traceback.format_exc())
 
-    def _registerTemplate(self, template, token):
+    def _registerTemplate(self, template, token): # noqa
         """
         Return True if there has been a change to the override.
         Due to the nature of this implementation, a multi-site deployment
