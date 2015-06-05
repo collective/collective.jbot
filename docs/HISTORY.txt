@@ -4,6 +4,9 @@ Changelog
 1.0a4 (unreleased)
 ------------------
 
+- Fix FS storage path: use ${buildout-dir}/var/jbot
+  [simahawk]
+
 - fix Storage getFileFromDirectory if file is plone.resource.file.FilesystemFile
   [ebrehault]
 

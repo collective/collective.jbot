@@ -45,8 +45,8 @@ Installation
 
 This implementation requires the use of the data directory of a running
 Plone client. For most Plone installs, the directory used will be something
-like `<buildout-dir>/var/instance/jbot`. The user running the Plone client
-will need write access to this directory.
+like `<buildout-dir>/var/jbot`. The directory will be created automatically if missing.
+The user running the Plone client will need write access to this directory.
 
 
 .. DANGER::
