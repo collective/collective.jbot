@@ -15,6 +15,8 @@ setup(name='collective.jbot',
       classifiers=[
           "Framework :: Plone",
           "Programming Language :: Python",
+          "Framework :: Plone :: 4.3",
+          "Framework :: Plone :: 5.0",
       ],
       keywords='plone templates customizations',
       author='Nathan Van Gheem',
